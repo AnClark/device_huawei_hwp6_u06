@@ -139,6 +139,7 @@ TARGET_PREBUILT_RECOVERY_KERNEL := device/huawei/hwp6_u06/recovery-kernel
 TARGET_RECOVERY_INITRC := device/huawei/hwp6_u06/recovery/init.rc
 
 #TWRP
+RECOVERY_VARIANT := twrp
 HAVE_SELINUX := true
 
 TW_MAX_BRIGHTNESS := 255
