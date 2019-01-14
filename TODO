@@ -1,6 +1,5 @@
 # TODO
 
-- Leds: If leds takes no effect, consider copy leds.c here.
 - root/init.rc: 
   - Custom init.rc may not be applied
   - SELinux context issue may occur

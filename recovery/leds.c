@@ -71,16 +71,19 @@ void set_leds(int green, int red) {
 
 int main(void){
 
-        if (check_usb_connection()) {
+	while(1) {
+		if (check_usb_connection()) {
 
-		if (battery_level())
-		      set_leds(255, 0);
-		else
-		      set_leds(255, 255);
+			if (battery_level())
+			      set_leds(255, 0);
+			else
+			      set_leds(255, 255);
 
-        }
-	else {
-        set_leds(0, 0);
+		}
+		else {
+		set_leds(0, 0);
+		}
 	}
+
 	return 0;
 }
