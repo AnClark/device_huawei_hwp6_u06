@@ -1,7 +1,0 @@
-# TODO
-
-- root/init.rc: 
-  - Custom init.rc may not be applied
-  - SELinux context issue may occur
-- recovery/ueventd.rc
-  - May occur compatibility issue
