@@ -95,7 +95,7 @@ BOARD_KERNEL_IMAGE_NAME := zImage
 # Use custom kernel building toolchain instead of Omni-provided one,
 # or the kernel won't boot
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-none-linux-gnueabi-
-KERNEL_TOOLCHAIN := $(TARGET_DEVICE_DIR)/toolchain/FriendlyARM/toolschain/4.4.3/bin
+KERNEL_TOOLCHAIN := $(abspath .)/device/huawei/hwp6_u06/toolchain/FriendlyARM/toolschain/4.4.3/bin
 
 # fix this up by examining /proc/mtd on a running device
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
