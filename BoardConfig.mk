@@ -92,8 +92,7 @@ BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset 0x01400000
 BOARD_KERNEL_IMAGE_NAME := zImage
-# Use custom kernel building toolchain instead of Omni-provided one,
-# or the kernel won't boot
+# Use custom kernel building toolchain instead of Omni-provided one, or the kernel won't boot
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-none-linux-gnueabi-
 KERNEL_TOOLCHAIN := $(abspath .)/device/huawei/hwp6_u06/toolchain/FriendlyARM/toolschain/4.4.3/bin
 
