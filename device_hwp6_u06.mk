@@ -19,7 +19,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/fstab.k3v2oem1:root/fstab.k3v2oem1 \
     $(LOCAL_PATH)/root/init.k3v2oem1.rc:root/init.k3v2oem1.rc \
     $(LOCAL_PATH)/root/init.k3v2oem1.usb.rc:root/init.k3v2oem1.usb.rc \
-    $(LOCAL_PATH)/root/init.rc:root/init.rc \
+    $(LOCAL_PATH)/root/init.k3v2oem1.extra.rc:root/init.k3v2oem1.extra.rc \
     $(LOCAL_PATH)/recovery/ueventd.k3v2oem1.rc:root/ueventd.k3v2oem1.rc \
     $(LOCAL_PATH)/recovery/ueventd.rc:root/ueventd.rc
 

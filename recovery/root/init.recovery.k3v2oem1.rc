@@ -51,6 +51,14 @@ on boot
     write /sys/devices/platform/ipps-v2.0/mcu "I 49"
 
 
+service leds /sbin/leds
+    disabled
+    seclabel u:r:recovery:s0
+
+service check /sbin/check
+    oneshot
+    seclabel u:r:recovery:s0
+
 
 on property:sys.storage.ums_enabled=1
     write /sys/class/android_usb/android0/enable 0
@@ -60,24 +68,6 @@ on property:sys.storage.ums_enabled=1
 on property:sys.storage.ums_enabled=0
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/functions adb
-    write /sys/class/android_usb/android0/enable ${service.adb.root}
-
-service leds /sbin/leds
-    disabled
-    seclabel u:r:recovery:s0
-
-service check /sbin/check
-    oneshot
-    seclabel u:r:recovery:s0
-
-on property:sys.usb.config=mass_storage,adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct 1035
-    write /sys/class/android_usb/android0/iSerial cleanup
-    write /sys/class/android_usb/f_mass_storage/luns sdcard
-    write /sys/class/android_usb/f_mass_storage/lun/file none
-    write /sys/class/android_usb/android0/functions mass_storage,adb
     write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state $sys.usb.config
+
+

@@ -82,7 +82,7 @@ TARGET_GRALLOC_USES_ASHMEM := true
 # Kernel
 # AnClark modified: Changed CMDLINE's vmalloc to 512M
 # NOTICE: mkbootimg version > Android 4.3 cannot generate valid bootimgs for Huawei P6.
-# 	  so we must use the older build instead.
+# 	  so we must use the older build instead. Android >= 8.0's mkbootimg has no problem.
 #TARGET_PREBUILT_KERNEL := device/huawei/hwp6_u06/kernel
 TARGET_KERNEL_SOURCE := kernel/huawei/hwp6_u06
 TARGET_KERNEL_CONFIG := cm_k3v2oem1_defconfig
@@ -93,7 +93,8 @@ BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset 0x01400000
 BOARD_KERNEL_IMAGE_NAME := zImage
-# Use custom kernel building toolchain instead of Omni-provided one
+# Use custom kernel building toolchain instead of Omni-provided one,
+# or the kernel won't boot
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-none-linux-gnueabi-
 KERNEL_TOOLCHAIN := $(ANDROID_BUILD_TOP)/device/huawei/hwp6_u06/toolchain/FriendlyARM/toolschain/4.4.3/bin
 
@@ -148,29 +149,7 @@ TW_BRIGHTNESS_PATH := "/sys/devices/platform/k3_fb.1/leds/lcd_backlight0/brightn
 BOARD_SEPOLICY_DIRS += \
     device/huawei/hwp6_u06/sepolicy
 
-BOARD_SEPOLICY_UNION += \
-    bluetooth.te \
-    debuggered.te \
-    device.te \
-    dhcp.te \
-    domain.te \
-    file.te \
-    file_contexts \
-    healthd.te \
-    init_shell.te \
-    mediaserver.te \
-    netd.te \
-    rild.te \
-    system.te \
-    vold.te \
-    zygote.te
-
 # Enable logcat support! Yahoo!
-TWRP_INCLUDE_LOGCAT := true
-TARGET_USES_LOGD := true
-
-# SELinux
- 
-# P6's kernel is too old, so we must lower the policy version
-# POLICYVERS := 26
+#TWRP_INCLUDE_LOGCAT := true
+#TARGET_USES_LOGD := true
 

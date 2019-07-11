@@ -1,0 +1,3 @@
+allow recovery tmpfs:fifo_file { create read write };
+allow adbd sysfs:file { read open };
+

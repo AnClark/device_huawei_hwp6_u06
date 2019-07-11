@@ -1,0 +1,567 @@
+on init
+    # Create cgroup mount points for process groups
+    mkdir /dev/cpuctl
+    mount cgroup none /dev/cpuctl cpu
+    chown system system /dev/cpuctl
+    chown system system /dev/cpuctl/tasks
+    chmod 0660 /dev/cpuctl/tasks
+    write /dev/cpuctl/cpu.shares 1024
+    write /dev/cpuctl/cpu.rt_runtime_us 950000
+    write /dev/cpuctl/cpu.rt_period_us 1000000
+
+    mkdir /dev/cpuctl/apps
+    chown system system /dev/cpuctl/apps/tasks
+    chmod 0666 /dev/cpuctl/apps/tasks
+    write /dev/cpuctl/apps/cpu.shares 1024
+    write /dev/cpuctl/apps/cpu.rt_runtime_us 800000
+    write /dev/cpuctl/apps/cpu.rt_period_us 1000000
+
+    mkdir /dev/cpuctl/apps/bg_non_interactive
+    chown system system /dev/cpuctl/apps/bg_non_interactive/tasks
+    chmod 0666 /dev/cpuctl/apps/bg_non_interactive/tasks
+    # 5.0 %
+    write /dev/cpuctl/apps/bg_non_interactive/cpu.shares 52
+    write /dev/cpuctl/apps/bg_non_interactive/cpu.rt_runtime_us 700000
+    write /dev/cpuctl/apps/bg_non_interactive/cpu.rt_period_us 1000000
+
+    # Graphics
+    chmod 777 /dev/graphics/fb0
+    chmod 777 /dev/graphics/galcore
+    
+    # NFC
+    chown system system /sys/bus/i2c/devices/1-0028/nfc_ven
+    chmod 0664 /sys/bus/i2c/devices/1-0028/nfc_ven
+    chown system system /sys/bus/i2c/devices/1-0028/nfc_module
+    chmod 0664 /sys/bus/i2c/devices/1-0028/nfc_module
+    chown system system /sys/bus/i2c/devices/1-0028/nfc_product
+    chmod 0664 /sys/bus/i2c/devices/1-0028/nfc_product
+
+
+on fs
+
+    # mount mtd partitions
+    wait /dev/block/platform/hi_mci.1/by-name/system
+    mount ext4 /dev/block/platform/hi_mci.1/by-name/system /system
+    mount ext4 /dev/block/platform/hi_mci.1/by-name/system /system ro remount
+    mount ext4 /dev/block/platform/hi_mci.1/by-name/cache /cache nosuid nodev
+    wait /dev/block/platform/hi_mci.1/by-name/userdata
+
+    wait /dev/block/platform/hi_mci.1/by-name/modemimage
+
+    mount ext4 /dev/block/platform/hi_mci.1/by-name/userdata /data nosuid nodev noatime wait crypt discard,noauto_da_alloc,data=ordered,user_xattr,discard,barrier=1
+    # set up cp-log dir
+    mkdir /data/cp-log/ 0764 radio radio
+
+    chmod 0660 /data/cp-log/amsg00000000.bin
+    chmod 0660 /data/cp-log/amsg00000001.bin
+    chmod 0660 /data/cp-log/amsg00000002.bin
+    chmod 0660 /data/cp-log/amsgmgr00000000
+    chmod 0660 /data/cp-log/amsgmgr00000001
+    chmod 0660 /data/cp-log/cmsg00000000.bin
+    chmod 0660 /data/cp-log/cmsg00000001.bin
+    chmod 0660 /data/cp-log/cmsg00000002.bin
+    chmod 0660 /data/cp-log/cmsgmgr00000000
+    chmod 0660 /data/cp-log/cmsgmgr00000001
+    chmod 0660 /data/cp-log/Errorlog0.bin
+    chmod 0660 /data/cp-log/Errorlog1.bin
+    chmod 0660 /data/cp-log/Exc_00000000.bin
+    chmod 0660 /data/cp-log/Exc_00000001.bin
+    chmod 0660 /data/cp-log/Exc_00000002.bin
+    chmod 0660 /data/cp-log/Exc_mgr00000002
+    chmod 0660 /data/cp-log/Ldf.log
+    chmod 0660 /data/cp-log/pmuRecord.txt
+    chmod 0660 /data/cp-log/pwcExc_0.txt
+    chmod 0660 /data/cp-log/reset.log
+    chmod 0660 /data/cp-log/sciRecord.txt
+    chmod 0660 /data/cp-log/UsimmInitLog_0
+    chmod 0660 /data/cp-log/UsimmInitLog_1
+    chmod 0660 /data/cp-log/UsimmInitLog_2
+    chmod 0660 /data/cp-log/UsimmInitLog_3
+    chmod 0660 /data/cp-log/usimmlogctrl.bin
+    chmod 0660 /data/cp-log/Zsp_00000000.bin
+    chmod 0660 /data/cp-log/Zsp_00000001.bin
+    chmod 0660 /data/cp-log/Zsp_00000002.bin
+    chmod 0660 /data/cp-log/Zsp_mgr00000000
+
+
+    chown radio radio /data/cp-log/amsg00000000.bin
+    chown radio radio /data/cp-log/amsg00000001.bin
+    chown radio radio /data/cp-log/amsg00000002.bin
+    chown radio radio /data/cp-log/amsgmgr00000000
+    chown radio radio /data/cp-log/amsgmgr00000001
+    chown radio radio /data/cp-log/cmsg00000000.bin
+    chown radio radio /data/cp-log/cmsg00000001.bin
+    chown radio radio /data/cp-log/cmsg00000002.bin
+    chown radio radio /data/cp-log/cmsgmgr00000000
+    chown radio radio /data/cp-log/cmsgmgr00000001
+    chown radio radio /data/cp-log/Errorlog0.bin
+    chown radio radio /data/cp-log/Errorlog1.bin
+    chown radio radio /data/cp-log/Exc_00000000.bin
+    chown radio radio /data/cp-log/Exc_00000001.bin
+    chown radio radio /data/cp-log/Exc_00000002.bin
+    chown radio radio /data/cp-log/Exc_mgr00000002
+    chown radio radio /data/cp-log/Ldf.log
+    chown radio radio /data/cp-log/pmuRecord.txt
+    chown radio radio /data/cp-log/pwcExc_0.txt
+    chown radio radio /data/cp-log/reset.log
+    chown radio radio /data/cp-log/sciRecord.txt
+    chown radio radio /data/cp-log/UsimmInitLog_0
+    chown radio radio /data/cp-log/UsimmInitLog_1
+    chown radio radio /data/cp-log/UsimmInitLog_2
+    chown radio radio /data/cp-log/UsimmInitLog_3
+    chown radio radio /data/cp-log/usimmlogctrl.bin
+    chown radio radio /data/cp-log/Zsp_00000000.bin
+    chown radio radio /data/cp-log/Zsp_00000001.bin
+    chown radio radio /data/cp-log/Zsp_00000002.bin
+    chown radio radio /data/cp-log/Zsp_mgr00000000
+
+    wait /dev/block/platform/hi_mci.1/by-name/cust
+    mount ext4 /dev/block/platform/hi_mci.1/by-name/cust /cust ro nosuid nodev noatime
+
+    mount ext4 /dev/block/platform/hi_mci.1/by-name/modemimage /modem/modem_image nosuid nodev
+    mount ext4 /dev/block/platform/hi_mci.1/by-name/modemnvm1 /modem/nvm1 nosuid nodev
+    mount ext4 /dev/block/platform/hi_mci.1/by-name/modemnvm2 /modem/nvm2 nosuid nodev
+    mount ext4 /dev/block/platform/hi_mci.1/by-name/splash2 /splash2 rw nosuid nodev noatime
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
+
+    mkdir /modem/nvm1/SC/ 0740 radio radio
+    mkdir /modem/nvm1/SC/Pers/ 0740 radio radio
+    mkdir /modem/nvm1/SC/Apsec/ 0740 radio radio
+
+    mkdir /modem/nvm2/nv_bak 0740 radio radio
+
+    mkdir /splash2/log 0775 system system
+
+    chmod 0740 /modem/modem_image
+    chmod 0740 /modem/modem_image/balong
+    chmod 0740 /modem/modem_image/balong/NV
+    chmod 0740 /modem/modem_image/balong/ZSP
+    chmod 0740 /modem/modem_image/mtk6252
+    chmod 0740 /modem/modem_image/qsc6085
+    chmod 0740 /modem/modem_image/xmm6260
+    chmod 0740 /modem/nvm1
+    chmod 0740 /modem/nvm2
+    chmod 0740 /modem/nvm2/nv_bak
+    chmod 0640 /modem/nvm1/NV.HNV
+    chmod 0640 /modem/nvm1/Nvim.bin
+    chmod 0640 /modem/nvm1/lte_xnv.xml
+    chmod 0640 /modem/nvm1/xnv.xml
+    chmod 0640 /modem/nvm1/LteInfoRbuFile.HNV
+    chmod 0640 /modem/nvm1/nv_updated
+    chmod 0640 /modem/nvm1/SC/Pers/AKFile.bin
+    chmod 0640 /modem/nvm1/SC/Pers/AKSign.hash
+    chmod 0640 /modem/nvm1/SC/Pers/CKFile.bin
+    chmod 0640 /modem/nvm1/SC/Pers/CKSign.hash
+    chmod 0640 /modem/nvm1/SC/Pers/PIFile.bin
+    chmod 0640 /modem/nvm1/SC/Pers/PISign.hash
+    chmod 0640 /modem/nvm1/SC/Pers/DKFile.bin
+    chmod 0640 /modem/nvm1/SC/Pers/DKSign.hash
+    chmod 0640 /modem/nvm2/nv_bak/NV.HNV
+    chmod 0640 /modem/nvm2/nv_bak/Nvim.bin
+    chmod 0640 /modem/nvm2/nv_bak/lte_xnv.xml
+    chmod 0640 /modem/nvm2/nv_bak/xnv.xml
+    chmod 0640 /modem/modem_image/balong/bootloader_test.BIN
+    chmod 0640 /modem/modem_image/balong/nv_updated
+    chmod 0640 /modem/modem_image/balong/modem_updated
+    chmod 0640 /modem/modem_image/balong/NV/NV.HNV
+    chmod 0640 /modem/modem_image/balong/NV/Nvim.bin
+    chmod 0640 /modem/modem_image/balong/NV/lte_xnv.xml
+    chmod 0640 /modem/modem_image/balong/NV/xnv.xml
+    chmod 0640 /modem/modem_image/balong/ZSP/a.bin
+    chmod 0640 /modem/modem_image/balong/ZSP/d.bin
+    chmod 0640 /modem/modem_image/balong/ZSP/dsp1.bin
+    chmod 0640 /modem/modem_image/balong/ZSP/dspCofCfg.bin
+    chmod 0640 /modem/modem_image/balong/ZSP/dyn.bin
+    chmod 0640 /modem/modem_image/balong/ZSP/hifi.bin
+    chmod 0640 /modem/modem_image/balong/ZSP/i.bin
+    chmod 0640 /modem/modem_image/balong/ZSP/r.bin
+    chmod 0640 /modem/modem_image/balong/ZSP/s.bin
+    chmod 0640 /modem/modem_image/balong/ZSP/tensilica_app.bin
+    chmod 0640 /modem/modem_image/balong/ZSP/ZSP.bin
+
+    chmod 0640 /modem/modem_image/xmm6260/HWT6260.fls
+    chmod 0640 /modem/nvm1/flag
+    chmod 0640 /modem/nvm1/firmware.md5
+    chmod 0640 /modem/nvm1/calib.nvm
+    chmod 0640 /modem/nvm1/dynamic.nvm
+    chmod 0640 /modem/nvm1/static.nvm
+    chmod 0640 /modem/nvm2/calib.nvm
+    chmod 0640 /modem/nvm2/dynamic.nvm
+    chmod 0640 /modem/nvm2/static.nvm
+    chmod 0640 /modem/modem_image/xmm6260/HWT6260.fls.fls
+    chmod 0640 /modem/modem_image/fdl1.bin
+    chmod 0640 /modem/modem_image/modem_zip.bin
+    chmod 0640 /modem/nvm2/fixnv.bin
+    chmod 0640 /modem/nvm1/runtimenv.bin
+
+    chown radio radio /modem/
+    chown radio radio /modem/nvm1
+    chown radio radio /modem/nvm2
+    chown radio radio /modem/nvm2/nv_bak
+    chmod 0740 /modem/nvm2/nv_bak
+    chown radio radio /modem/nvm1/NV.HNV
+    chown radio radio /modem/nvm1/Nvim.bin
+    chown radio radio /modem/nvm1/lte_xnv.xml
+    chown radio radio /modem/nvm1/xnv.xml
+    chown radio radio /modem/nvm1/LteInfoRbuFile.HNV
+    chown radio radio /modem/nvm1/nv_updated
+    chown radio radio /modem/nvm1/SC/Pers/AKFile.bin
+    chown radio radio /modem/nvm1/SC/Pers/AKSign.hash
+    chown radio radio /modem/nvm1/SC/Pers/CKFile.bin
+    chown radio radio /modem/nvm1/SC/Pers/CKSign.hash
+    chown radio radio /modem/nvm1/SC/Pers/PIFile.bin
+    chown radio radio /modem/nvm1/SC/Pers/PISign.hash
+    chown radio radio /modem/nvm1/SC/Pers/DKFile.bin
+    chown radio radio /modem/nvm1/SC/Pers/DKSign.hash
+    chown radio radio /modem/nvm2/nv_bak/NV.HNV
+    chown radio radio /modem/nvm2/nv_bak/Nvim.bin
+    chown radio radio /modem/nvm2/nv_bak/lte_xnv.xml
+    chown radio radio /modem/nvm2/nv_bak/xnv.xml
+    chown radio radio /modem/modem_image
+    chown radio radio /modem/modem_image/balong/
+    chown radio radio /modem/modem_image/balong/NV
+    chown radio radio /modem/modem_image/balong/ZSP
+    chown radio radio /modem/modem_image/mtk6252
+    chown radio radio /modem/modem_image/qsc6085
+    chown radio radio /modem/modem_image/xmm6260
+    chown radio radio /modem/modem_image/balong/bootloader_test.BIN
+    chown radio radio /modem/modem_image/balong/nv_updated
+    chown radio radio /modem/modem_image/balong/modem_updated
+    chown radio radio /modem/modem_image/balong/NV/NV.HNV
+    chown radio radio /modem/modem_image/balong/NV/Nvim.bin
+    chown radio radio /modem/modem_image/balong/NV/lte_xnv.xml
+    chown radio radio /modem/modem_image/balong/NV/xnv.xml
+    chown radio radio /modem/modem_image/balong/ZSP/a.bin
+    chown radio radio /modem/modem_image/balong/ZSP/d.bin
+    chown radio radio /modem/modem_image/balong/ZSP/dsp1.bin
+    chown radio radio /modem/modem_image/balong/ZSP/dspCofCfg.bin
+    chown radio radio /modem/modem_image/balong/ZSP/dyn.bin
+    chown radio radio /modem/modem_image/balong/ZSP/hifi.bin
+    chown radio radio /modem/modem_image/balong/ZSP/i.bin
+    chown radio radio /modem/modem_image/balong/ZSP/r.bin
+    chown radio radio /modem/modem_image/balong/ZSP/s.bin
+    chown radio radio /modem/modem_image/balong/ZSP/tensilica_app.bin
+    chown radio radio /modem/modem_image/balong/ZSP/ZSP.bin
+
+    chown radio radio /modem/modem_image/xmm6260/HWT6260.fls
+    chown radio radio /modem/nvm1/flag
+    chown radio radio /modem/nvm1/firmware.md5
+    chown radio radio /modem/nvm1/calib.nvm
+    chown radio radio /modem/nvm1/dynamic.nvm
+    chown radio radio /modem/nvm1/static.nvm
+    chown radio radio /modem/nvm2/calib.nvm
+    chown radio radio /modem/nvm2/dynamic.nvm
+    chown radio radio /modem/nvm2/static.nvm
+    chown radio radio /modem/modem_image/xmm6260/HWT6260.fls.fls
+
+    chown radio radio /modem/modem_image/fdl1.bin
+    chown radio radio /modem/modem_image/modem_zip.bin
+    chown radio radio /modem/nvm2/fixnv.bin
+    chown radio radio /modem/nvm1/runtimenv.bin
+
+    chown system system sys/devices/sensor00/fn01/wakeup_threshold
+    chown system system sys/devices/sensor00/fn01/nosleep
+    chown system system sys/devices/sensor00/fn01/allow_doze
+    chown system system sys/devices/sensor00/fn01/reportrate
+    chown system system sys/devices/sensor00/fn01/interrupt_enable
+    chown system system sys/devices/sensor00/fn01/chargerinput
+    chown system system sys/devices/sensor00/fn01/reset
+    chown system system sys/devices/sensor00/fn01/sleepmode
+    chown system system sys/devices/sensor00/fn01/doze_holdoff
+    chown system system sys/devices/sensor00/fn11/flip
+    chown system system sys/devices/sensor00/fn11/clip
+    chown system system sys/devices/sensor00/fn11/rezeroWait
+    chown system system sys/devices/sensor00/fn11/rezeroOnResume
+    chown system system sys/devices/sensor00/fn11/rezero
+    chown system system sys/devices/sensor00/fn11/relreport
+    chown system system sys/devices/sensor00/fn11/swap
+    chown system system sys/devices/sensor00/fn11/offset
+    chown system system sys/devices/sensor00/fn11/abs_pos_filt
+    chown system system sys/devices/sensor00/fn34/status
+    chown system system sys/devices/sensor00/fn34/cmd
+    chown system system sys/devices/sensor00/fn34/rescanPDT
+    chown system system sys/devices/sensor00/fn34/bootloaderid
+    chown system system sys/devices/sensor00/fn34/data
+    chown system system sys/devices/sensor00/fn34/blocknum
+    chown system system sys/devices/sensor00/enabled
+    chown system system sys/devices/sensor00/fn54/mmi_test
+    chown system system sys/devices/sensor00/fn54/mmi_test_result
+
+    chmod 0660 /sys/devices/virtual/usbswitch/usbsw/swstate
+    chown system system /sys/devices/virtual/usbswitch/usbsw/swstate
+
+
+on post-fs-data
+    
+    # Create dump dir and collect dumps.
+    # Do this before we mount cache so eventually we can use cache for
+    # storing dumps on platforms which do not have a dedicated dump partition.
+    mkdir /data/dontpanic 0754 root log
+
+    # Collect apanic data, free resources and re-arm trigger
+    copy /proc/apanic_console /data/dontpanic/apanic_console
+    chown root log /data/dontpanic/apanic_console
+    chmod 0644 /data/dontpanic/apanic_console
+
+    copy /proc/apanic_threads /data/dontpanic/apanic_threads
+    chown root log /data/dontpanic/apanic_threads
+    chmod 0644 /data/dontpanic/apanic_threads
+    
+    copy /proc/apanic_srecorder /data/dontpanic/apanic_srecorder
+    chown root log /data/dontpanic/apanic_srecorder
+    chmod 0644 /data/dontpanic/apanic_srecorder
+    
+    write /proc/apanic_console 1
+
+    # Mass storage support
+    chown system system /sys/class/android_usb/android0/f_mass_storage/lun/file
+    chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file
+
+    # RNDIS
+    chown system system /sys/class/android_usb/android0/f_rndis/ethaddr
+    chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
+
+
+on boot
+
+    # set RLIMIT_NICE to allow priorities from 19 to -20
+    setrlimit 13 40 40
+
+    chmod 0660 /sys/devices/platform/xmm_power/state
+    chown radio radio /sys/devices/platform/xmm_power/state
+    chown radio radio /sys/devices/platform/hisik3-ehci/ehci_power
+
+    ##Modem device#
+    #Balong#
+    chmod 0660 /sys/devices/platform/balong_power/state
+    chown radio radio /sys/devices/platform/balong_power/state
+    chmod 0660 /sys/devices/platform/balong_power/gpio
+    chown radio radio /sys/devices/platform/balong_power/gpio
+    chmod 0660 /sys/devices/platform/balong_power/delay
+    chown radio radio /sys/devices/platform/balong_power/delay
+    #QSC6085#
+    chmod 0660 /sys/devices/platform/qsc6085_boot/state
+    chown radio radio /sys/devices/platform/qsc6085_boot/state
+    chmod 0660 /sys/devices/platform/qsc6085_boot/gpio
+    chown radio radio /sys/devices/platform/qsc6085_boot/gpio
+    chmod 0660 /dev/ttyAMA1
+    chown radio radio /dev/ttyAMA1
+
+    #MTK6252#
+    chmod 0660 /sys/devices/platform/mtk6252_boot/state
+    chown radio radio /sys/devices/platform/mtk6252_boot/state
+    chmod 0660 /sys/devices/platform/mtk6252_boot/gpio
+    chown radio radio /sys/devices/platform/mtk6252_boot/gpio
+    chmod 0660 /dev/ttyAMA3
+    chown radio radio /dev/ttyAMA3
+
+    chmod 0664 /sys/kernel/debug/modem_control
+    chown radio radio /sys/kernel/debug/modem_control
+
+    #SPRD8803G#
+    chmod 0660 /sys/devices/platform/sprd8803g_boot/state
+    chown radio radio /sys/devices/platform/sprd8803g_boot/state
+    chmod 0660 /sys/devices/platform/sprd8803g_boot/gpio
+    chown radio radio /sys/devices/platform/sprd8803g_boot/gpio 
+
+
+    # Other specific perms
+    chown system system /sys/class/leds/touchkey-led-bright/brightness
+    chmod 0664 /sys/class/leds/touchkey-led-bright/brightness
+    chown system system /sys/class/timed_output/vibrator/enable
+    chown system system /sys/bus/i2c/devices/0-0033/tps61310_led_lightness
+
+    chown system system /sys/bus/i2c/devices/0-0033/thermal_protect_flash_led_state
+    chmod 0660 /sys/bus/i2c/devices/0-0033/thermal_protect_flash_led_state
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_block_freq
+    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_block_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_gpu_block_freq
+    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_gpu_block_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_gpu_max_freq
+    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_gpu_max_freq
+    chown system /sys/bus/i2c/devices/1-006b/hot_enable_charger
+    chmod 0660 /sys/bus/i2c/devices/1-006b/hot_enable_charger
+    chown system /sys/bus/i2c/devices/1-006b/hot_limit_charging
+    chmod 0660 /sys/bus/i2c/devices/1-006b/hot_limit_charging
+
+    chown system system /sys/touch_screen/update
+    chmod 0664 /sys/touch_screen/update
+    
+    chown system system /sys/devices/platform/huawei_touch/touch_chip_info
+    chown system system /sys/devices/platform/huawei_touch/touch_glove
+    chown system system /sys/devices/platform/huawei_touch/touch_mmi_test
+    chown system system /sys/bus/ttsp4/devices/cyttsp4_device_access.main_ttsp_core/ic_grpnum
+    chown system system /sys/bus/ttsp4/devices/cyttsp4_device_access.main_ttsp_core/ic_grpdata
+    
+# Set these so we can remotely update SELinux policy
+    chown system system /sys/fs/selinux/load
+    chown system system /sys/fs/selinux/enforce
+
+    chown system system /sys/class/compass/akm8963/enable_acc
+    chown system system /sys/class/compass/akm8963/enable_mag
+    chown system system /sys/class/compass/akm8963/enable_ori
+    chown system system /sys/class/compass/akm8963/delay_acc
+    chown system system /sys/class/compass/akm8963/delay_mag
+    chown system system /sys/class/compass/akm8963/delay_ori
+    chown system system /sys/class/compass/akm8963/set_cal
+    chown system system /sys/class/compass/akm8963/compass_info
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/data
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/debug_suspend
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/delay
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/distortion
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/dynamic_matrix
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/ellipsoid_mode
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/enable
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/filter_enable
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/filter_len
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/filter_noise
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/filter_threshold
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/modalias
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/name
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/offsets
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/position
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/power
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/shape
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/static_matrix
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/status
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/threshold
+    chown system system /sys/bus/i2c/drivers/yamaha_geomagnetic/0-002e/wake
+    chown system system /sys/devices/platform/ori_input.0/data
+    chown system system /sys/devices/platform/ori_input.0/delay
+    chown system system /sys/devices/platform/ori_input.0/enable
+    chown system system /sys/devices/platform/ori_input.0/status
+    chown system system /sys/devices/platform/ori_input.0/wake
+    chown system system /sys/devices/platform/k3v2_power_key/key_count_ctrl
+    chown system system /data/key_count_file
+
+    chown system system /dev/block/platform/hi_mci.1/by-name/oeminfo
+    chmod 0660 /dev/block/platform/hi_mci.1/by-name/oeminfo
+    chown system system /dev/block/mmcblk0p6
+    chmod 0660 /dev/block/mmcblk0p6
+
+    write /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_block_freq 1500000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_ddr_block_freq 450000
+
+
+on property:init.svc.bootanim=stopped
+    write /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_block_freq 0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_ddr_block_freq 0
+
+
+on boot
+# Define TCP buffer sizes for various networks
+#   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
+    setprop net.tcp.buffersize.default 4096,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.wifi    524288,1048576,2097152,262144,524288,1048576
+    setprop net.tcp.buffersize.lte     524288,1048576,2097152,262144,524288,1048576
+# DTS2013011403171 g00122041 2013-01-16 begin
+    setprop net.tcp.buffersize.umts    4094,87380,1220608,4096,16384,1220608
+    setprop net.tcp.buffersize.hspa    4094,87380,1220608,4096,16384,1220608
+    setprop net.tcp.buffersize.hsupa   4094,87380,1220608,4096,16384,1220608
+    setprop net.tcp.buffersize.hsdpa   4094,87380,1220608,4096,16384,1220608
+    setprop net.tcp.buffersize.hspap   4094,87380,1220608,4096,16384,1220608
+# DTS2013011403171 g00122041 2013-01-16 end
+    setprop net.tcp.buffersize.edge    4093,26280,35040,4096,16384,35040
+    setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
+    setprop net.tcp.buffersize.evdo    4094,87380,262144,4096,16384,262144
+# DTS2013011405602 c00188971 2013-01-14 begin
+    setprop net.tcp.buffersize.tds     4094,87380,262144,4096,16384,262144
+    setprop net.tcp.buffersize.tds_hsdpa    4094,87380,262144,4096,16384,262144
+# DTS2013011405602 c00188971 2013-01-14 end
+
+# LCD HVGA
+    setprop ro.sf.lcd_density 320
+    setprop hw.lcd.density 320
+
+    setprop ro.config.compatibility_enable 1
+
+
+
+
+service pppd-gprs /system/bin/pppd call gprs
+    class main
+    user root
+    group radio cache inet misc audio sdcard_rw qcom_oncrpc diag
+    oneshot
+    disabled
+
+service pppd-evdo /system/bin/pppd call evdo
+    class main
+    user root
+    group radio cache inet misc audio sdcard_rw qcom_oncrpc diag
+    oneshot
+    disabled
+
+on early-boot
+    setprop rild.readytostart null
+
+service ril-daemon /system/bin/rild
+    class main
+    socket rild stream 660 root radio
+    socket rild-debug stream 660 radio system
+    user root
+    group radio cache inet misc audio sdcard_r sdcard_rw log system
+
+service sprd_download /system/bin/sprd_download
+    class main
+    user root
+    group radio cache inet misc audio sdcard_rw log system
+    disabled
+    oneshot
+
+service nvm_server_sprd /system/bin/nvm_server_sprd
+    class main
+    user root
+    group radio cache inet misc audio sdcard_rw log system
+    disabled
+
+service ril-daemon1 /system/bin/rild -c 1
+    class main
+    disabled
+    socket rild1 stream 660 root radio
+    socket rild-debug1 stream 660 radio system
+    user root
+    group radio cache inet misc audio sdcard_rw log
+
+service nvm-server /system/bin/nvm_server 
+    class main
+    socket nvm-ctl stream 660 radio radio
+    user root
+    group radio
+
+on property:rild.readytostart=true
+    start ril-daemon1
+
+service akmd8963  /system/bin/akmd8963
+    class main
+    oneshot
+
+service yamaha_ori /system/bin/orientationd
+    disabled
+    oneshot
+
+service yamaha_geo /system/bin/geomagneticd
+    disabled
+    oneshot
+
+service hw_pcui_service /system/bin/hw_modem_service /dev/ttyGS1 /dev/mux_qsc5
+    class main
+    user root
+    disabled
+
+service diagserver /system/bin/diagserver
+    class main
+    user root
+    oneshot
+
+service hw_modem_service /system/bin/hw_modem_service /dev/ttyGS0 /dev/mux_qsc6
+    class main
+    user root
+    disabled
+
+service hwnffserver /system/bin/hwnffserver
+    class main
+    socket hwnff stream 0660 root mount
+

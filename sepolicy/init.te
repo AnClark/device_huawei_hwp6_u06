@@ -12,3 +12,23 @@ allow init kernel:security {
 allow init device:chr_file getattr;
 #allow init rootfs:file { create write };
 
+
+
+domain_trans(init, rootfs, adbd)
+allow init userdata_block_device:blk_file relabelto;
+allow init userdata_block_device:lnk_file relabelto;
+
+# Allow init to read LD_PRELOAD
+allow init { domain -lmkd -crash_dump }:process noatsecure;
+
+allow init ram_device:blk_file write;
+
+allow init device:chr_file { getattr };
+
+#allow init teecd_data_file:filesystem relabelto;
+
+# Allow init to mount adbd binary
+allow init rootfs:file mounton;
+
+# Allow init to mount vendor configs
+allow init vendor_configs_file:file mounton;
