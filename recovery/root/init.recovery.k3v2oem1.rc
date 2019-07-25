@@ -1,3 +1,5 @@
+import init.k3v2oem1.usb.rc
+
 on init
     mkdir /external_sd
     mkdir /sdcard
