@@ -22,11 +22,7 @@ This repository is the device tree for Huawei Ascent P6, the former leadership o
 - MTP support
 - SD Card access
 - OTG support (USB storages are treated as SCSI devices, so you have to manually mount via `mount /dev/sda1 /otg`)
-
-### What doesn't Work
-
-- ADB access... :angry: 
-- ADB sideload
+- Full ADB access via FunctionFS!
 
 ## TODO
 
