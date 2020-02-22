@@ -88,7 +88,7 @@ TARGET_KERNEL_SOURCE := kernel/huawei/hwp6_u06
 TARGET_KERNEL_CONFIG := cm_k3v2oem1_defconfig
 #BOARD_CUSTOM_MKBOOTIMG := device/huawei/hwp6_u06/toolchain/mkbootimg-4.3
 #BOARD_CUSTOM_BOOTIMG_MK := device/huawei/hwp6_u06/mkbootimg_hwp6.mk
-BOARD_KERNEL_CMDLINE := androidboot.hardware=k3v2oem1 vmalloc=512M k3v2_pmem=1 mmcparts=mmcblk0:p1(xloader),p3(nvme),p4(misc),p5(splash),p6(oeminfo),p7(reserved1),p8(reserved2),p9(splash2),p10(recovery2),p11(recovery),p12(boot),p13(modemimage),p14(modemnvm1),p15(modemnvm2),p16(system),p17(cache),p18(cust),p19(userdata);mmcblk1:p1(ext_sdcard)
+BOARD_KERNEL_CMDLINE := androidboot.hardware=k3v2oem1 vmalloc=512M k3v2_pmem=1 androidboot.selinux=permissive mmcparts=mmcblk0:p1(xloader),p3(nvme),p4(misc),p5(splash),p6(oeminfo),p7(reserved1),p8(reserved2),p9(splash2),p10(recovery2),p11(recovery),p12(boot),p13(modemimage),p14(modemnvm1),p15(modemnvm2),p16(system),p17(cache),p18(cust),p19(userdata);mmcblk1:p1(ext_sdcard)
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset 0x01400000
@@ -149,7 +149,7 @@ TW_BRIGHTNESS_PATH := "/sys/devices/platform/k3_fb.1/leds/lcd_backlight0/brightn
 BOARD_SEPOLICY_DIRS += \
     device/huawei/hwp6_u06/sepolicy
 
-# Enable logcat support! Yahoo!
+# Enable logcat support
 #TWRP_INCLUDE_LOGCAT := true
 #TARGET_USES_LOGD := true
 
