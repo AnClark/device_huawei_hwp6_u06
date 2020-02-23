@@ -1,0 +1,8 @@
+# Allow recovery to access fifo file (e.g. twadbfifo)
+allow recovery tmpfs:fifo_file { open create read write };
+allow recovery rootfs:fifo_file { open create read write };
+
+# Try to allow adbd to read sysfs file
+allow adbd sysfs:file { read open };
+
+

@@ -1,3 +1,5 @@
+import init.k3v2oem1.usb.rc
+
 on init
     mkdir /external_sd
     mkdir /sdcard
@@ -5,15 +7,17 @@ on init
 
     write /sys/module/block2mtd/parameters/block2mtd /dev/block/mmcblk0p3
     mount tmpfs tmpfs /tmp
-    # change nve device visit permission
 
+    # change nve device visit permission
     wait /dev/nve0
     chown root system /dev/nve0
     chmod 0770 /dev/nve0
     chmod 0664 /sys/module/usbcore/parameters/autosuspend
     chown radio radio /sys/module/usbcore/parameters/autosuspend
     write /sys/module/usbcore/parameters/autosuspend 2000
-    start leds
+
+    # AnClark NOTICE: Currently service `leds` consumes too much CPU. Need to rewrite.
+    #start leds
 
 on fs
 
@@ -40,6 +44,11 @@ on fs
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_ddr_block_freq 450000
 
 on boot
+    # Allocate SetUID permission to logd
+    chown root root /sbin/logd
+    chmod 6755 /sbin/logd
+
+on boot
     mount debugfs /sys/kernel/debug /sys/kernel/debug
 
     write /sys/devices/system/cpu/cpu1/online 0
@@ -57,15 +66,5 @@ service check /sbin/check
     oneshot
     seclabel u:r:recovery:s0
 
-
-on property:sys.storage.ums_enabled=1
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/functions adb,mass_storage
-    write /sys/class/android_usb/android0/enable 1
-
-on property:sys.storage.ums_enabled=0
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/functions adb
-    write /sys/class/android_usb/android0/enable 1
 
 
