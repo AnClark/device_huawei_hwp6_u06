@@ -145,7 +145,7 @@ TW_BRIGHTNESS_PATH := "/sys/devices/platform/k3_fb.1/leds/lcd_backlight0/brightn
 BOARD_SEPOLICY_DIRS += \
     device/huawei/hwp6_u06/sepolicy
 
-# Enable logcat support! Yahoo!
+# Enable logcat support. But logd cannot run.
 #TWRP_INCLUDE_LOGCAT := true
 #TARGET_USES_LOGD := true
 
